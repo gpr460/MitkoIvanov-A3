@@ -32,9 +32,11 @@ public:
 			void	AddToNetworkIdToGameObjectMap( GameObjectPtr inGameObject );
 			void	RemoveFromNetworkIdToGameObjectMap( GameObjectPtr inGameObject );
 
+
 protected:
 
 	IntToGameObjectMap		mNetworkIdToGameObjectMap;
+	DeliveryNotificationManager mDeliveryNotificationManager;
 
 private:
 

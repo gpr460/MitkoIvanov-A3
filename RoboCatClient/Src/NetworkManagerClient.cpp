@@ -101,6 +101,9 @@ void NetworkManagerClient::HandleStatePacket( InputMemoryBitStream& inInputStrea
 {
 	if( mState == NCS_Welcomed )
 	{
+		//process sequence number
+		mDeliveryNotificationManager.ReadAndProcessState(inInputStream);
+
 		ReadLastMoveProcessedOnServerTimestamp( inInputStream );
 
 		//old
@@ -208,6 +211,9 @@ void NetworkManagerClient::SendInputPacket()
 	{
 		OutputMemoryBitStream inputPacket; 
 		inputPacket.Write( kInputCC );
+
+		
+		mDeliveryNotificationManager.WriteState(inputPacket);
 
 		//we only want to send the last three moves
 		int moveCount = moveList.GetMoveCount();

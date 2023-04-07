@@ -171,6 +171,7 @@ void DeliveryNotificationManager::ProcessTimedOutPackets()
 		//was this packet dispatched before the current time minus the timeout duration?
 		if( nextInFlightPacket.GetTimeDispatched() < timeoutTime )
 		{
+			LOG("Packet %d's ack timed out :(", nextInFlightPacket.GetSequenceNumber());
 			//it failed! let us know about that
 			HandlePacketDeliveryFailure( nextInFlightPacket );
 			mInFlightPackets.pop_front();

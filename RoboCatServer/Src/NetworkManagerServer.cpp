@@ -155,6 +155,7 @@ void NetworkManagerServer::SendStatePacketToClient( ClientProxyPtr inClientProxy
 	statePacket.Write( kStateCC );
 
 	// TODO: Need to acquire an in flight packet here! 
+	InFlightPacket* ifp = mDeliveryNotificationManager.WriteState(statePacket);
 
 	WriteLastMoveTimestampIfDirty( statePacket, inClientProxy );
 
@@ -162,9 +163,17 @@ void NetworkManagerServer::SendStatePacketToClient( ClientProxyPtr inClientProxy
 
 	ReplicationManagerTransmissionData* rmtd = new ReplicationManagerTransmissionData(&inClientProxy->GetReplicationManagerServer());
 	inClientProxy->GetReplicationManagerServer().Write(statePacket, rmtd);
+	//Now rmtd contains the same state as statePacket
+	// 
+
+	//Want to set up something that will call our rmtd's HandleDeliverySuccess() / Failure()
+	//when the packet is successfully ack'd or timed out respectively
 
 	// Need to set the transmission data of the in-flight packet we got on line 157
 	// to the transmission data we just created.
+
+	ifp->SetTransmissionData('RPLM', TransmissionDataPtr(rmtd));
+	//now rmtd contains the data needed if we need to resend
 
 	SendPacket( statePacket, inClientProxy->GetSocketAddress() );
 	
@@ -220,6 +229,8 @@ void NetworkManagerServer::HandleInputPacket( ClientProxyPtr inClientProxy, Inpu
 {
 	uint32_t moveCount = 0;
 	Move move;
+	mDeliveryNotificationManager.ReadAndProcessState(inInputStream);
+
 	inInputStream.Read( moveCount, 2 );
 	
 	for( ; moveCount > 0; --moveCount )
