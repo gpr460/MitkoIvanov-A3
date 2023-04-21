@@ -56,7 +56,8 @@ void RoboCat::SimulateMovement( float inDeltaTime )
 
 void RoboCat::Update()
 {
-	
+	//SimulateMovement()
+
 }
 
 void RoboCat::ProcessCollisions()

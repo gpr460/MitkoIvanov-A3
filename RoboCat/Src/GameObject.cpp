@@ -13,7 +13,10 @@ GameObject::GameObject() :
 
 void GameObject::Update()
 {
-	//object don't do anything by default...	
+	//object don't do anything by default...
+	//simulate stuff here for dead reckoning
+	//call updates for game objects(RoboCat)
+	
 }
 
 
