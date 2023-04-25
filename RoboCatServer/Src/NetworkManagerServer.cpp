@@ -6,7 +6,7 @@ NetworkManagerServer*	NetworkManagerServer::sInstance;
 NetworkManagerServer::NetworkManagerServer() :
 	mNewPlayerId( 1 ),
 	mNewNetworkId( 1 ),
-	mTimeBetweenStatePackets( 0.033f ),
+	mTimeBetweenStatePackets( 0.5f ),//increases the gap of update packets from the server
 	mClientDisconnectTimeout( 3.f )
 {
 }
@@ -127,6 +127,11 @@ void NetworkManagerServer::RespawnCats()
 
 void NetworkManagerServer::SendOutgoingPackets()
 {
+	static float lastTimeSent = 0;
+	if (Timing::sInstance.GetFrameStartTime() < lastTimeSent + mTimeBetweenStatePackets) return;
+
+	lastTimeSent = Timing::sInstance.GetFrameStartTime();
+
 	//let's send a client a state packet whenever their move has come in...
 	for( auto it = mAddressToClientMap.begin(), end = mAddressToClientMap.end(); it != end; ++it )
 	{

@@ -13,7 +13,7 @@ void RoboCatServer::HandleDying()
 
 void RoboCatServer::Update()
 {
-	RoboCat::Update();
+	RoboCat::Update();//currenty empty
 	
 	Vector3 oldLocation = GetLocation();
 	Vector3 oldVelocity = GetVelocity();
@@ -41,6 +41,8 @@ void RoboCatServer::Update()
 		oldRotation != GetRotation() )
 	{
 		NetworkManagerServer::sInstance->SetStateDirty( GetNetworkId(), ECRS_Pose );
+		//state that has fallen out of sync
+		//
 	}
 }
 

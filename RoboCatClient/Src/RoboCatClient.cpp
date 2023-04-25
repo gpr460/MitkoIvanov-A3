@@ -24,20 +24,24 @@ void RoboCatClient::HandleDying()
 
 void RoboCatClient::Update()
 {
-	//for now, we don't simulate any movement on the client side
-	//we only move when the server tells us to move
 	//this is where we implement dead reckoning simulation on client side
 	
-	MoveList& moveList = InputManager::sInstance->GetMoveList();
-	for (const Move& unprocessedMove : moveList)
+	if (NetworkManagerClient::sInstance->GetPlayerId())
 	{
-		const InputState& currentState = unprocessedMove.GetInputState();
-		float deltaTime = unprocessedMove.GetDeltaTime();
-		ProcessInput(deltaTime, currentState);
-		SimulateMovement(deltaTime);
-	}
+		MoveList& moveList = InputManager::sInstance->GetMoveList();
+		SimulateMovement(moveList.GetLastMoveTimestamp());
 
-	//moveList.Clear();
+		//for (const Move& unprocessedMove : moveList)
+		//{
+		//	const InputState& currentState = unprocessedMove.GetInputState();
+		//	float deltaTime = unprocessedMove.GetDeltaTime();
+		//	ProcessInput(deltaTime, currentState);
+		//	SimulateMovement(deltaTime);
+		//}
+		
+
+	}
+	
 }
 
 void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
