@@ -9,7 +9,6 @@ YarnClient::YarnClient()
 void YarnClient::Update()
 {
 	Yarn::Update();
-
 }
 
 void YarnClient::Read( InputMemoryBitStream& inInputStream )

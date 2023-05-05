@@ -66,6 +66,8 @@ void RoboCatClient::HandleShooting()
 
 		//fire!
 		YarnPtr yarn = std::static_pointer_cast<Yarn>(GameObjectRegistry::sInstance->CreateGameObject('YARN'));
+		NetworkManagerClient::sInstance->AddToNetworkIdToGameObjectMap(yarn);
+
 		yarn->InitFromShooter(this);
 	}
 }
