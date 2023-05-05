@@ -39,10 +39,11 @@ public:
 protected:
 	RoboCat();
 
+	void	AdjustVelocityByThrust(float inDeltaTime);
+
 private:
 
 
-	void	AdjustVelocityByThrust( float inDeltaTime );
 
 	Vector3				mVelocity;
 

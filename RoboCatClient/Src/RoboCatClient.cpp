@@ -42,7 +42,13 @@ void RoboCatClient::Update()
 		{
 			ProcessInput(deltaTime, currentState);
 		}
-		SimulateMovement(deltaTime);
+		//SimulateMovement(deltaTime);
+		AdjustVelocityByThrust(deltaTime);
+
+		SetLocation(GetLocation() + (GetVelocity() * 0.5f) * deltaTime);
+
+		ProcessCollisions();
+
 	}
 	
 
