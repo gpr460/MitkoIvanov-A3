@@ -24,25 +24,47 @@ void RoboCatClient::HandleDying()
 
 void RoboCatClient::Update()
 {
+
+
 	//this is where we implement dead reckoning simulation on client side
-	
-	if (NetworkManagerClient::sInstance->GetPlayerId())
+	//float xVeloSqrd = GetVelocity().mX * GetVelocity().mX;
+	//float yVeloSqrd = GetVelocity().mY * GetVelocity().mY;
+	//float zVeloSqrd = GetVelocity().mZ * GetVelocity().mZ;
+	//float veloMag = sqrt(xVeloSqrd + yVeloSqrd + zVeloSqrd);//calculation for magnitude of current velocity
+	//Vector3 newVelo = Vector3(xVeloSqrd, yVeloSqrd, zVeloSqrd);
+
+	MoveList& moveList = InputManager::sInstance->GetMoveList();
+	for (const Move& unprocessedMove : moveList)
 	{
-		MoveList& moveList = InputManager::sInstance->GetMoveList();
-		SimulateMovement(moveList.GetLastMoveTimestamp());
-
-		//for (const Move& unprocessedMove : moveList)
-		//{
-		//	const InputState& currentState = unprocessedMove.GetInputState();
-		//	float deltaTime = unprocessedMove.GetDeltaTime();
-		//	ProcessInput(deltaTime, currentState);
-		//	SimulateMovement(deltaTime);
-		//}
-		
-
+		const InputState& currentState = unprocessedMove.GetInputState();
+		float deltaTime = unprocessedMove.GetDeltaTime();
+		if (GetPlayerId() == NetworkManagerClient::sInstance->GetPlayerId())
+		{
+			ProcessInput(deltaTime, currentState);
+		}
+		SimulateMovement(deltaTime);
 	}
 	
+
+	HandleShooting();
+
 }
+
+void RoboCatClient::HandleShooting()
+{
+	float time = Timing::sInstance.GetFrameStartTime();
+	if (mIsShooting && Timing::sInstance.GetFrameStartTime() > mTimeOfNextShot)
+	{
+		//not exact, but okay
+		mTimeOfNextShot = time + mTimeBetweenShots;
+
+		//fire!
+		YarnPtr yarn = std::static_pointer_cast<Yarn>(GameObjectRegistry::sInstance->CreateGameObject('YARN'));
+		yarn->InitFromShooter(this);
+	}
+}
+
+
 
 void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
 {

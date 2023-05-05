@@ -25,7 +25,6 @@ private:
 
 	ECatControlType	mCatControlType;
 
-
 	float		mTimeOfNextShot;
 	float		mTimeBetweenShots;
 

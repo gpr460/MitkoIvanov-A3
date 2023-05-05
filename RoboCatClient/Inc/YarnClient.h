@@ -8,6 +8,8 @@ public:
 protected:
 	YarnClient();
 
+	void Update();
+
 private:
 
 	SpriteComponentPtr	mSpriteComponent;
